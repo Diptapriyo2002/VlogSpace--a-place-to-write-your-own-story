@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Create Vlog</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="js_app.js"></script>
+  <style>
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 0;
+      transition: all 0.3s ease;
+    }
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      text-decoration: none;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-links a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    .nav-links a:hover::before {
+      left: 100%;
+    }
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    .cta-btn {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      color: white !important;
+      padding: 0.75rem 1.5rem !important;
+      border-radius: 30px !important;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+    }
+    main {
+      margin-top: 100px;
+    }
+
+    /* Image upload styles */
+    .image-upload-section {
+      margin: 1rem 0;
+      padding: 1.5rem;
+      border: 2px dashed rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .image-upload-section:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .image-upload-section.dragover {
+      border-color: #4ecdc4;
+      background: rgba(78, 205, 196, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    #imageInput {
+      display: none;
+    }
+
+    .upload-btn {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 0.5rem;
+    }
+
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-preview {
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-preview .remove-btn {
+      background: #ff4757;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .image-preview .remove-btn:hover {
+      background: #ff3742;
+    }
+
+    .upload-progress {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="logo">VlogSpace</a>
+      <nav class="nav-links">
+        <a href="view.html" class="cta-btn">Browse Vlogs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Create Vlog</h1>
+    <form id="vlogForm" onsubmit="submitVlog(event)">
+      <input id="title" placeholder="Title" required><br>
+      <textarea id="content" placeholder="Write your vlog here..." rows="8" required></textarea><br>
+      
+      <!-- Image Upload Section -->
+      <div class="image-upload-section" id="imageUploadSection">
+        <div class="upload-icon">📷</div>
+        <h3 style="margin-bottom: 0.5rem;">Add an Image to Your Vlog</h3>
+        <p style="margin-bottom: 1rem; color: rgba(255, 255, 255, 0.7);">
+          Drag & drop an image here or click to select
+        </p>
+        <input type="file" id="imageInput" accept="image/*">
+        <button type="button" class="upload-btn" onclick="document.getElementById('imageInput').click()">
+          Choose Image
+        </button>
+        <div class="upload-progress" id="uploadProgress">
+          <p>Uploading...</p>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+        <div class="image-preview" id="imagePreview">
+          <img id="previewImg" src="" alt="Preview">
+          <br>
+          <button type="button" class="remove-btn" onclick="removeImage()">Remove Image</button>
+        </div>
+      </div>
+      
+      <input id="author" placeholder="Author (optional)"><br>
+      <button type="submit">Publish</button>
+    </form>
+  </main>
+
+  <script>
+    let selectedImage = null;
+    let imageBase64 = null;
+
+    // Drag and drop functionality
+    const uploadSection = document.getElementById('imageUploadSection');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+
+    uploadSection.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadSection.classList.add('dragover');
+    });
+
+    uploadSection.addEventListener('dragleave', () => {
+      uploadSection.classList.remove('dragover');
+    });
+
+    uploadSection.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadSection.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0 && files[0].type.startsWith('image/')) {
+        handleImageSelect(files[0]);
+      }
+    });
+
+    imageInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleImageSelect(e.target.files[0]);
+      }
+    });
+
+    function handleImageSelect(file) {
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB');
+        return;
+      }
+
+      selectedImage = file;
+      
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        imageBase64 = e.target.result.split(',')[1]; // Remove data:image/jpeg;base64, part
+        imagePreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage() {
+      selectedImage = null;
+      imageBase64 = null;
+      imagePreview.style.display = 'none';
+      imageInput.value = '';
+    }
+
+    async function submitVlog(e) {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const author = document.getElementById('author').value || "guest";
+
+      try {
+        // Prepare the vlog data
+        const vlogData = {
+          title,
+          content,
+          author
+        };
+
+        // Add image data if present
+        if (imageBase64) {
+          vlogData.image = imageBase64;
+          vlogData.imageType = selectedImage.type;
+        }
+
+        const res = await fetch("https://h0rmkmihk4.execute-api.ap-south-1.amazonaws.com/vlogs/postData", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(vlogData)
+        });
+        
+        const data = await res.json();
+        console.log("Response:", data);
+        alert('Published!');
+        window.location.href = 'view.html';
+      } catch(err) {
+        console.error(err);
+        alert('Failed to publish');
+      }
+    }
+  </script>
+</body>
+</html>
