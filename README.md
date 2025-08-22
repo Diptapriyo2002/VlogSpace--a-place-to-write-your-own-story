@@ -11,14 +11,15 @@ functions through Amazon API Gateway for serverless backend operations.
 
 **Now to intregate this project with AWS follow the below steps:**
 
-**Setup in AWS Console:**
+# Setup in AWS Console:
 1.	Create a DynamoDB table Vlogs with id as the Partition key , set id as number.
 2.	Create these two Lambda functions and set TABLE_NAME environment variable to Vlogs.
 3.	Add IAM role to Lambda with AmazonDynamoDBFullAccess.
 
 We’ll make two Lambda functions:
 1. Create Post Lambda (POST /posts1):
-**Lamda post:**
+
+# Lamda post:
 
 import json
 import boto3
@@ -137,7 +138,7 @@ def lambda_handler(event, context):
             })
         }
 ---------------------------------------------------------------------------------------------------
-**Event(example):**
+# Event(example):
 {
     "id": 1,
     "title": "Sample Title",
@@ -148,6 +149,7 @@ def lambda_handler(event, context):
 
 -----------------------------------------------------------------------------------------------------
 **2. Get Posts Lambda (GET /posts2):**
+
 # Lamda Get:
 
 import boto3
@@ -168,7 +170,7 @@ def lambda_handler(event, context):
         response = table.scan()
         posts = response['Items']
         
-        # Handle pagination if there are many posts
+        #Handle pagination if there are many posts
         while 'LastEvaluatedKey' in response:
             response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
             posts.extend(response['Items'])
