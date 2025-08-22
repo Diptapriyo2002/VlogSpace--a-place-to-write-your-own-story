@@ -19,12 +19,12 @@ functions through Amazon API Gateway for serverless backend operations.
 We’ll make two Lambda functions:
 1. Create Post Lambda (POST /posts1):
 **Lamda post:**
+
 import json
 import boto3
 import os
 import time
-
-  # DynamoDB setup
+#DynamoDB setup
 dynamodb = boto3.resource('dynamodb')
 table_name = os.environ.get('TABLE_NAME', 'Vlogs')
 table = dynamodb.Table(table_name)
@@ -149,11 +149,11 @@ def lambda_handler(event, context):
 -----------------------------------------------------------------------------------------------------
 **2. Get Posts Lambda (GET /posts2):**
 # Lamda Get:
+
 import boto3
 import json
 from decimal import Decimal
 import os
-
 def decimal_default(obj):
     if isinstance(obj, Decimal):
         return float(obj)
